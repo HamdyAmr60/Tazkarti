@@ -19,6 +19,7 @@ namespace Tazkarti.Repository
 
         public UnitOfWork(TazkartiDbContext dbContext)
         {
+            _repositories = new Hashtable();
             this._dbContext = dbContext;
         }
         public ValueTask DisposeAsync()
