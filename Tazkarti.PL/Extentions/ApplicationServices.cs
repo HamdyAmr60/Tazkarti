@@ -1,5 +1,6 @@
 ﻿using Tazkarti.Core;
 using Tazkarti.Core.Repositories;
+using Tazkarti.PL.Helpers;
 using Tazkarti.Repository;
 using Tazkarti.Repository.Repositories;
 
@@ -11,7 +12,7 @@ namespace Tazkarti.PL.Extentions
         {
             Services.AddScoped<IUnitOfWork , UnitOfWork>();
             Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
+            Services.AddAutoMapper(M => M.AddProfile(typeof(Mapped)));
             return Services;
         }
     }
