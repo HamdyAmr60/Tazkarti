@@ -13,6 +13,7 @@ namespace Tazkarti.PL.Extentions
             Services.AddScoped<IUnitOfWork , UnitOfWork>();
             Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             Services.AddAutoMapper(M => M.AddProfile(typeof(Mapped)));
+            Services.AddScoped<ImageResolver, ImageResolver>();
             return Services;
         }
     }

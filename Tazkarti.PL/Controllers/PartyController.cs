@@ -20,18 +20,20 @@ namespace Tazkarti.PL.Controllers
             this._mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Party>>> AllParties()
+        public async Task<ActionResult<IReadOnlyList<ReturnedParty>>> AllParties()
         {
           var result =    await  _unitOfWork.repository<Party>().GetAllAsync();
             if (result == null) return NotFound();
-            return Ok(result);
+            var mappedParties = _mapper.Map<IReadOnlyList<ReturnedParty>>(result);
+            return Ok(mappedParties);
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Party>> GetPartyById(int id)
+        public async Task<ActionResult<ReturnedParty>> GetPartyById(int id)
         {
             var result = await _unitOfWork.repository<Party>().GetByIdAsync(id);
             if (result == null) return NotFound();
-            return Ok(result);
+            var mappedParties = _mapper.Map<ReturnedParty>(result);
+            return Ok(mappedParties);
         }
 
         [HttpPost]
@@ -49,6 +51,58 @@ namespace Tazkarti.PL.Controllers
             await _unitOfWork.SavaAsync();
             return Ok(mappedresult);
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ReturnedParty>> updateParty(PartyDTO partyDTO, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            var party = await _unitOfWork.repository<Party>().GetByIdAsync(id);
+            if (party == null)
+            {
+                return NotFound();
+            }
+
+            if (partyDTO.PictureUrl == null)
+            {
+                party.Name = partyDTO.Name;
+                party.Address = partyDTO.Address;
+                party.Time = partyDTO.Time;
+            }
+            else
+            {
+                var newPictureUrl = ImageFunctions.Upload(partyDTO.PictureUrl, "Parties");
+
+                if (!string.IsNullOrEmpty(party.invitationUrl))
+                {
+                    ImageFunctions.DeleteFile(party.invitationUrl);
+                }
+
+                party.invitationUrl = newPictureUrl;
+                party.Name = partyDTO.Name;
+                party.Address = partyDTO.Address;
+                party.Time = partyDTO.Time;
+            }
+
+            _unitOfWork.repository<Party>().Update(party);
+
+            await _unitOfWork.SavaAsync();
+
+            var returnedParty = _mapper.Map<Party, ReturnedParty>(party);
+
+            return Ok(returnedParty);
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<PartyDTO>> Delete(int id)
+        {
+            var party =await _unitOfWork.repository<Party>().GetByIdAsync(id);
+            if (party == null) return NotFound();
+            _unitOfWork.repository<Party>().Delete(party);
+            ImageFunctions.DeleteFile(party.invitationUrl);
+           await _unitOfWork.SavaAsync();
+            return Ok(new { message = "Deleted Successfully" });
+        }
     }
 }

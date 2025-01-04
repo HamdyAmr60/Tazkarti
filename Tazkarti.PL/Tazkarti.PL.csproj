@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Tazkarti.Reposatory\Tazkarti.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\Parties\" />
-  </ItemGroup>
-
 </Project>

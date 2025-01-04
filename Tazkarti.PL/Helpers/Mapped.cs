@@ -9,6 +9,7 @@ namespace Tazkarti.PL.Helpers
         public Mapped()
         {
             CreateMap<PartyDTO, Party>();
+            CreateMap<Party, ReturnedParty>().ForMember(p=>p.invitationUrl , o=>o.MapFrom<ImageResolver>());
         }
     }
 }

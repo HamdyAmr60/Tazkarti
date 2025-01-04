@@ -13,13 +13,15 @@
             file.CopyTo(fs);
             return Path.Combine("images\\Parties", FileName);
         }
-        public static void DeleteFile(string FolderName, string FileName)
+        public static void DeleteFile(string fileName)
         {
-            var FilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", FolderName);
+            // Combine folder name and file name to get the full path
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", fileName);
 
-            if (File.Exists(FilePath))
+            // Check if the file exists and delete it
+            if (File.Exists(filePath))
             {
-                File.Delete(FilePath);
+                File.Delete(filePath);
             }
         }
     }
