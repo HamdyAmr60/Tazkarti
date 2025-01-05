@@ -10,6 +10,8 @@ namespace Tazkarti.PL.Helpers
         {
             CreateMap<PartyDTO, Party>();
             CreateMap<Party, ReturnedParty>().ForMember(p=>p.invitationUrl , o=>o.MapFrom<ImageResolver>());
+            CreateMap<GuestsDTO, Guest>();
+            CreateMap<Guest, ReturnedGuest>();
         }
     }
 }

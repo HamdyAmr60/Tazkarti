@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tazkarti.Reposatory\Tazkarti.Repository.csproj" />
+    <ProjectReference Include="..\Tazkarti.Service\Tazkarti.Service.csproj" />
   </ItemGroup>
 
 </Project>

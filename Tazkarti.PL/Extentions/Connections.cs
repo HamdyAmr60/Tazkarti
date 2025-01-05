@@ -6,14 +6,14 @@ namespace Tazkarti.PL.Extentions
 {
     public static class Connections
     {
-        public static IServiceCollection ConnectDB(this IServiceCollection Services , WebApplicationBuilder builder)
+        public static WebApplicationBuilder ConnectDB(this WebApplicationBuilder builder)
         {
-            Services.AddDbContext<TazkartiDbContext>(Options =>
+           builder.Services.AddDbContext<TazkartiDbContext>(Options =>
             {
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            return Services;
+            return builder;
         }
     }
 }

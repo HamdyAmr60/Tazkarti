@@ -14,5 +14,6 @@ namespace Tazkarti.Core.Models
         [ForeignKey("Party")]
         public int PartyId { get; set; }
         public Party Party { get; set; }
+        public string QrCodeUrl { get; set; }
     }
 }

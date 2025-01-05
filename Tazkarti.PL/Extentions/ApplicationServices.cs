@@ -1,8 +1,10 @@
 ﻿using Tazkarti.Core;
 using Tazkarti.Core.Repositories;
+using Tazkarti.Core.Services;
 using Tazkarti.PL.Helpers;
 using Tazkarti.Repository;
 using Tazkarti.Repository.Repositories;
+using Tazkarti.Service;
 
 namespace Tazkarti.PL.Extentions
 {
@@ -14,6 +16,7 @@ namespace Tazkarti.PL.Extentions
             Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             Services.AddAutoMapper(M => M.AddProfile(typeof(Mapped)));
             Services.AddScoped<ImageResolver, ImageResolver>();
+            Services.AddScoped<IQRCodeService,QRCodeService>();
             return Services;
         }
     }
