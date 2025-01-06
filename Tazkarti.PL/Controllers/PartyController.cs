@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tazkarti.Core;
 using Tazkarti.Core.Models;
+using Tazkarti.Core.Specifications.PartySpecs;
 using Tazkarti.PL.DTOs;
 using Tazkarti.PL.Helpers;
 
@@ -22,7 +23,8 @@ namespace Tazkarti.PL.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ReturnedParty>>> AllParties()
         {
-          var result =    await  _unitOfWork.repository<Party>().GetAllAsync();
+            var specs = new PartyWithGuests();
+          var result =    await  _unitOfWork.repository<Party>().GetAllAsync(specs);
             if (result == null) return NotFound();
             var mappedParties = _mapper.Map<IReadOnlyList<ReturnedParty>>(result);
             return Ok(mappedParties);
@@ -30,7 +32,8 @@ namespace Tazkarti.PL.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ReturnedParty>> GetPartyById(int id)
         {
-            var result = await _unitOfWork.repository<Party>().GetByIdAsync(id);
+            var specs = new PartyWithGuests(id);
+            var result = await _unitOfWork.repository<Party>().GetByIdAsync(specs);
             if (result == null) return NotFound();
             var mappedParties = _mapper.Map<ReturnedParty>(result);
             return Ok(mappedParties);
@@ -59,7 +62,7 @@ namespace Tazkarti.PL.Controllers
                 return BadRequest();
             }
 
-            var party = await _unitOfWork.repository<Party>().GetByIdAsync(id);
+            var party = await _unitOfWork.repository<Party>().GetByIdOnlyAsync(id);
             if (party == null)
             {
                 return NotFound();
@@ -95,9 +98,9 @@ namespace Tazkarti.PL.Controllers
             return Ok(returnedParty);
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PartyDTO>> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var party =await _unitOfWork.repository<Party>().GetByIdAsync(id);
+            var party =await _unitOfWork.repository<Party>().GetByIdOnlyAsync(id);
             if (party == null) return NotFound();
             _unitOfWork.repository<Party>().Delete(party);
             ImageFunctions.DeleteFile(party.invitationUrl);
